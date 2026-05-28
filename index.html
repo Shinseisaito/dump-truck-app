@@ -363,7 +363,7 @@ function addEtc(data={}){
   </select>
 
 <label>高速乗り口IC</label>
-<select id="etcStart">
+<select class="etcStart">
 <option value="">選択してください</option>
 <!-- 道央道 -->
 <option>札幌JCT</option>
@@ -462,7 +462,7 @@ function addEtc(data={}){
 </select>
 
 <label>高速降り口IC</label>
-<select id="etcEnd">
+<select class="etcEnd">
 <option value="">選択してください</option>
 <!-- 道央道 -->
 <option>札幌JCT</option>
@@ -736,10 +736,10 @@ async function sendData(){
       card.querySelector(".etcEnd").value,
 
       etcCount:
-      card.querySelector(".etcCount").value
+      card.querySelector(".etcCount").value,
 
       etcPrice:
-      card.querySelector(".etcPrice").value
+      card.querySelector(".etcPrice").value,
 
     });
 
