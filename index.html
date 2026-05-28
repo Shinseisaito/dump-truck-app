@@ -1,48 +1,109 @@
+```html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<title>大型ダンプ点検</title>
+<title>
+トラック運搬管理システム
+</title>
 
 <style>
 
 body{
-  font-family:sans-serif;
-  background:#f5f5f5;
   margin:0;
+  background:#f3f4f6;
+  font-family:sans-serif;
+  padding-bottom:120px;
+}
+
+.header{
+  background:#111827;
+  color:white;
   padding:20px;
+  font-size:24px;
+  font-weight:bold;
+  text-align:center;
+}
+
+.container{
+  padding:15px;
 }
 
 .card{
   background:white;
   border-radius:16px;
   padding:20px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom:20px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.08);
 }
 
-h2{
-  margin-top:0;
+.section-title{
+  font-size:20px;
+  font-weight:bold;
+  margin-bottom:20px;
 }
 
 label{
+  display:block;
+  margin-bottom:8px;
   font-weight:bold;
 }
 
-input{
+input,
+textarea,
+select{
   width:100%;
-  padding:12px;
-  margin-top:10px;
+  box-sizing:border-box;
+  padding:14px;
+  border-radius:10px;
+  border:1px solid #d1d5db;
   margin-bottom:20px;
-  border-radius:8px;
-  border:1px solid #ccc;
   font-size:16px;
 }
 
-.check-group{
-  margin-bottom:25px;
+button{
+  border:none;
+  border-radius:10px;
+  padding:12px;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.add-btn{
+  width:100%;
+  background:#2563eb;
+  color:white;
+  margin-bottom:20px;
+}
+
+.fixed-submit{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:white;
+  padding:15px;
+  box-shadow:0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.submit-btn{
+  width:100%;
+  background:#16a34a;
+  color:white;
+  padding:18px;
+  font-size:22px;
+}
+
+.check-item{
+  margin-bottom:24px;
+}
+
+.check-title{
+  font-weight:bold;
+  margin-bottom:10px;
 }
 
 .check-buttons{
@@ -52,51 +113,42 @@ input{
 
 .check-buttons button{
   flex:1;
-  padding:16px;
-  border:none;
-  border-radius:12px;
-  font-size:20px;
-  background:#ddd;
+  background:#d1d5db;
 }
 
 .ok.active{
-  background:#28a745;
+  background:#16a34a;
   color:white;
 }
 
 .ng.active{
-  background:#dc3545;
+  background:#dc2626;
   color:white;
 }
 
-.send-btn{
-  width:100%;
-  padding:18px;
-  border:none;
-  border-radius:14px;
-  background:#007bff;
+.na.active{
+  background:#6b7280;
   color:white;
-  font-size:20px;
-}
-
-textarea{
-  width:100%;
-  height:120px;
-  border-radius:10px;
-  padding:10px;
-  font-size:16px;
-  border:1px solid #ccc;
 }
 
 </style>
-
 </head>
 
 <body>
 
+<div class="header">
+トラック運搬管理システム
+</div>
+
+<div class="container">
+
+<!-- 基本 -->
+
 <div class="card">
 
-<h2>大型ダンプ日常点検</h2>
+<div class="section-title">
+基本情報
+</div>
 
 <label>運転手名</label>
 <input id="driver">
@@ -104,134 +156,482 @@ textarea{
 <label>車両番号</label>
 <input id="truck">
 
-<div class="check-group">
-
-<p>タイヤ</p>
-
-<div class="check-buttons">
-
-<button class="ok"
-onclick="setCheck('tire','OK',this)">
-○
-</button>
-
-<button class="ng"
-onclick="setCheck('tire','NG',this)">
-×
-</button>
+<label>元請け会社</label>
+<input id="contractor">
 
 </div>
 
+<!-- 現場 -->
+
+<div class="card">
+
+<div class="section-title">
+現場情報
 </div>
 
-<div class="check-group">
+<div id="siteContainer"></div>
 
-<p>ブレーキ</p>
+<button
+type="button"
+class="add-btn"
+onclick="addSite()">
 
-<div class="check-buttons">
+＋現場追加
 
-<button class="ok"
-onclick="setCheck('brake','OK',this)">
-○
-</button>
-
-<button class="ng"
-onclick="setCheck('brake','NG',this)">
-×
 </button>
 
 </div>
 
+<!-- ETC -->
+
+<div class="card">
+
+<div class="section-title">
+ETC情報
 </div>
 
-<!-- NG時だけ表示 -->
+<div id="etcContainer"></div>
 
-<div id="memoArea" style="display:none;">
+<button
+type="button"
+class="add-btn"
+onclick="addEtc()">
 
-<p>異常内容</p>
+＋ETC追加
+
+</button>
+
+</div>
+
+<!-- 運行 -->
+
+<div class="card">
+
+<div class="section-title">
+運行情報
+</div>
+
+<label>始業時距離</label>
+<input type="number" id="startKm">
+
+<label>終業時距離</label>
+<input type="number" id="endKm">
+
+<label>給油時距離</label>
+<input type="number" id="fuelKm">
+
+<label>軽油給油量</label>
+<input type="number" id="fuelLiter">
+
+<label>アドブルー給油量</label>
+<input type="number" id="adblueLiter">
+
+</div>
+
+<!-- 点検 -->
+
+<div class="card">
+
+<div class="section-title">
+日常点検
+</div>
+
+<div id="checks"></div>
+
+</div>
+
+<!-- メモ -->
+
+<div
+class="card"
+id="memoArea"
+style="display:none;"
+>
+
+<div class="section-title">
+異常報告
+</div>
 
 <textarea id="memo"></textarea>
 
 </div>
 
-<br>
+</div>
 
-<button class="send-btn" onclick="sendData()">
+<div class="fixed-submit">
+
+<button
+class="submit-btn"
+onclick="sendData()">
+
 送信
+
 </button>
 
 </div>
 
 <script>
 
-let tire = "";
-let brake = "";
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbwBhe6HdMpnPfGfgoTLxyPRo6e00acUqB2pAZkRr6NF7yS4VtKV_z4m5duHZVVu6aDf/exec";
 
-function setCheck(type,value,btn){
+// --------------------
+// 現場追加
+// --------------------
 
-  if(type=="tire"){
-    tire = value;
-  }
+function addSite(data={}){
 
-  if(type=="brake"){
-    brake = value;
-  }
+  const div =
+  document.createElement("div");
 
-  const parent =
-    btn.parentElement;
+  div.className = "card";
 
-  parent.querySelectorAll("button")
-    .forEach(b=>b.classList.remove("active"));
+  div.innerHTML = `
 
-  btn.classList.add("active");
+  <label>現場名</label>
+  <input class="siteName"
+  value="${data.siteName||""}">
 
-  // NGなら異常欄表示
+  <label>ユニック使用</label>
+  <select class="unicUse">
 
-  if(value=="NG"){
+    <option value="">
+    選択
+    </option>
 
-    document
-      .getElementById("memoArea")
-      .style.display="block";
+    <option
+    ${data.unicUse==="有"?"selected":""}>
+    有
+    </option>
 
-  }
+    <option
+    ${data.unicUse==="無"?"selected":""}>
+    無
+    </option>
+
+  </select>
+
+  <label>積場</label>
+  <input class="loadingPlace"
+  value="${data.loadingPlace||""}">
+
+  <label>降場</label>
+  <input class="unloadingPlace"
+  value="${data.unloadingPlace||""}">
+
+  `;
+
+  siteContainer.appendChild(div);
 
 }
 
+// --------------------
+// ETC追加
+// --------------------
+
+function addEtc(data={}){
+
+  const div =
+  document.createElement("div");
+
+  div.className = "card";
+
+  div.innerHTML = `
+
+  <label>ETC支払い</label>
+
+  <select class="etcType">
+
+    <option value="">
+    選択
+    </option>
+
+    <option
+    ${data.etcType==="得意先払い"?"selected":""}>
+    得意先払い
+    </option>
+
+    <option
+    ${data.etcType==="当社払い"?"selected":""}>
+    当社払い
+    </option>
+
+    <option
+    ${data.etcType==="本人払い"?"selected":""}>
+    本人払い
+    </option>
+
+  </select>
+
+  <label>乗り口IC</label>
+  <input class="etcStart"
+  value="${data.etcStart||""}">
+
+  <label>降り口IC</label>
+  <input class="etcEnd"
+  value="${data.etcEnd||""}">
+
+  <label>高速使用回数</label>
+  <input
+  type="number"
+  class="etcCount"
+  value="${data.etcCount||""}">
+
+  `;
+
+  etcContainer.appendChild(div);
+
+}
+
+// --------------------
+// 点検
+// --------------------
+
+const items = [
+
+"タイヤ",
+"ホイールナット",
+"灯火類",
+"油漏れ",
+"エア漏れ",
+"ホーン",
+"バックブザー",
+"荷台",
+"グリースアップ",
+"アルコール"
+
+];
+
+let checks = {};
+
+items.forEach(item=>{
+
+  const div =
+  document.createElement("div");
+
+  div.className =
+  "check-item";
+
+  div.innerHTML = `
+
+  <div class="check-title">
+  ${item}
+  </div>
+
+  <div class="check-buttons">
+
+    <button
+    type="button"
+    class="ok">
+    ○
+    </button>
+
+    <button
+    type="button"
+    class="ng">
+    ×
+    </button>
+
+    <button
+    type="button"
+    class="na">
+    該当なし
+    </button>
+
+  </div>
+
+  `;
+
+  const buttons =
+  div.querySelectorAll("button");
+
+  buttons[0].onclick =
+  ()=>setCheck(item,"OK",buttons[0]);
+
+  buttons[1].onclick =
+  ()=>setCheck(item,"NG",buttons[1]);
+
+  buttons[2].onclick =
+  ()=>setCheck(item,"該当なし",buttons[2]);
+
+  checks.appendChild?.();
+
+  document
+  .getElementById("checks")
+  .appendChild(div);
+
+});
+
+function setCheck(
+item,
+value,
+btn
+){
+
+  checks[item] = value;
+
+  btn.parentElement
+  .querySelectorAll("button")
+  .forEach(b=>{
+
+    b.classList.remove("active");
+
+  });
+
+  btn.classList.add("active");
+
+  const hasNg =
+  Object.values(checks)
+  .includes("NG");
+
+  memoArea.style.display =
+  hasNg ? "block":"none";
+
+}
+
+// --------------------
+// 送信
+// --------------------
+
 async function sendData(){
+
+  const sites = [];
+
+  document
+  .querySelectorAll(
+    "#siteContainer .card"
+  )
+  .forEach(card=>{
+
+    sites.push({
+
+      siteName:
+      card.querySelector(".siteName").value,
+
+      unicUse:
+      card.querySelector(".unicUse").value,
+
+      loadingPlace:
+      card.querySelector(".loadingPlace").value,
+
+      unloadingPlace:
+      card.querySelector(".unloadingPlace").value
+
+    });
+
+  });
+
+  const etcs = [];
+
+  document
+  .querySelectorAll(
+    "#etcContainer .card"
+  )
+  .forEach(card=>{
+
+    etcs.push({
+
+      etcType:
+      card.querySelector(".etcType").value,
+
+      etcStart:
+      card.querySelector(".etcStart").value,
+
+      etcEnd:
+      card.querySelector(".etcEnd").value,
+
+      etcCount:
+      card.querySelector(".etcCount").value
+
+    });
+
+  });
 
   const data = {
 
     driver:
-      document.getElementById("driver").value,
+    driver.value,
 
     truck:
-      document.getElementById("truck").value,
+    truck.value,
 
-    tire:tire,
+    contractor:
+    contractor.value,
 
-    brake:brake,
+    startKm:
+    startKm.value,
+
+    endKm:
+    endKm.value,
+
+    fuelKm:
+    fuelKm.value,
+
+    fuelLiter:
+    fuelLiter.value,
+
+    adblueLiter:
+    adblueLiter.value,
+
+    sites:sites,
+
+    etcs:etcs,
+
+    checks:checks,
 
     memo:
-      document.getElementById("memo").value
+    memo.value
 
   };
 
-  await fetch(
-    "https://script.google.com/macros/s/AKfycbz2cXit0OFYM9TxfX4RzUHjlZXWQ0ktwV3RcSkMy7dhbKp3zZhopI_TCuRbKyLZU5al/exec",
-    {
+  try{
 
-      method:"POST",
+    const response =
+    await fetch(
+      SCRIPT_URL,
+      {
 
-      body:JSON.stringify(data)
+        method:"POST",
+
+        headers:{
+          "Content-Type":
+          "text/plain"
+        },
+
+        body:
+        JSON.stringify(data)
+
+      }
+    );
+
+    const result =
+    await response.json();
+
+    if(result.status==="success"){
+
+      alert("送信完了");
+
+    }else{
+
+      alert(result.message);
 
     }
-  );
 
-  alert("送信完了");
+  }catch(error){
+
+    alert(error);
+
+  }
 
 }
+
+// 初期表示
+
+addSite();
+addEtc();
 
 </script>
 
 </body>
 </html>
+```
