@@ -136,7 +136,7 @@ button{
 <body>
 
 <div class="header">
-トラック運搬管理システム
+セルフ運搬管理システム
 </div>
 
 <div class="container">
@@ -375,6 +375,13 @@ function addEtc(data={}){
   type="number"
   class="etcCount"
   value="${data.etcCount||""}">
+
+  <label>高速料金</label>
+
+<input
+type="number"
+class="etcPrice"
+value="${data.etcPrice||""}">
 
   `;
 
